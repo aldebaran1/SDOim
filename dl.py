@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import urllib3
 from typing import Union
+from dateutil.parser import parse
 
 def dl(date:datetime = None, 
        wl: int = None, 
@@ -66,11 +67,21 @@ def dl(date:datetime = None,
         with open(savefn, 'wb') as f:
             f.write(r.read())
 
+if __name__ == '__main__':
+    from argparse import ArgumentParser
+    p = ArgumentParser()
+    p.add_argument('date', help='start/end times UTC e.g. 2012-11-03')
+    p.add_argument('resolution', help='what picture resolution do you want? 512,1024,2K or 4K', default=512)
+    p.add_argument('wavelength', help='AIA-wavelength', default=193)
+    p.add_argument('odir', help='Output directory to save the images.', type=str)
+    P = p.parse_args()
+    
+    dl(date = parse(P.date), wl = P.wavelength, res = P.resolution, odir = P.odir)
 
-#urlroot = 'https://sdo.gsfc.nasa.gov/assets/img/browse/' #2016/03/09/'
-res = 1024
-date = datetime(2012,3,20)#'20120320'
-wl = '0193'
-odir = 'E:\\sdo\\20120320\\'
-
-dl(date=date,wl=193,res=res,odir=odir)
+##urlroot = 'https://sdo.gsfc.nasa.gov/assets/img/browse/' #2016/03/09/'
+#res = 1024
+#date = datetime(2012,3,20)#'20120320'
+#wl = '0193'
+#odir = 'E:\\sdo\\20120320\\'
+#
+#dl(date=date,wl=193,res=res,odir=odir)
